@@ -1,22 +1,75 @@
 name: rmarrero/inception:latest
 version: '3.8'
+
 services:
-  db:
-    image: mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: inception_db
-      MYSQL_USER: inception_user
-      MYSQL_PASSWORD: inception_password
-    ports:
-      - "3306:3306"
+  # --- SERVICIO MARIADB ---
+  mariadb:
+    container_name: mariadb
+    build:
+      context: ./requirements/mariadb
+      dockerfile: Dockerfile
+    image: mariadb
+    restart: always
+    env_file:
+      - .env
     volumes:
       - db_data:/var/lib/mysql
+    networks:
+      - inception_network
+    # No exponemos puertos al exterior para cumplir con la seguridad
 
-  adminer:
-    image: adminer
-    build: ./adminer
-    container_name: adminer
+  # --- SERVICIO WORDPRESS ---
+  wordpress:
+    container_name: wordpress
+    build:
+      context: ./requirements/wordpress
+      dockerfile: Dockerfile
+    image: wordpress
     restart: always
+    depends_on:
+      - mariadb
+    env_file:
+      - .env
+    volumes:
+      - website_files:/var/www/html
+    networks:
+      - inception_network
+
+  # --- SERVICIO NGINX ---
+  nginx:
+    container_name: nginx
+    build:
+      context: ./requirements/nginx
+      dockerfile: Dockerfile
+    image: nginx
+    restart: always
+    depends_on:
+      - wordpress
     ports:
-      - 8080:8080
+      - "443:443"
+    env_file:
+      - .env
+    volumes:
+      - website_files:/var/www/html
+    networks:
+      - inception_network
+
+# --- RED INTERNA ---
+networks:
+  inception_network:
+    driver: bridge
+
+# --- VOLÚMENES (Persistencia en /home/rmarrero/data) ---
+volumes:
+  db_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/db_data
+  website_files:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/website_files
