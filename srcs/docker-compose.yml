@@ -66,10 +66,10 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ${DATA_PATH}/db_data
+      device: ${USER_DATA_PATH}/db_data
   website_files:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: ${DATA_PATH}/website_files
+      device: ${USER_DATA_PATH}/website_files

@@ -11,23 +11,26 @@ RESET		= \033[0m
 
 all: build up
 
+# Añadimos el flag --env-file para que sepa exactamente dónde está el secreto
+DOCKER_COMPOSE = docker compose --env-file srcs/.env -f srcs/docker-compose.yml
+
 # 1. Crear directorios y construir imágenes
 build:
 	@echo "$(GREEN)Creando directorios para volúmenes en $(DATA_PATH)...$(RESET)"
 	@mkdir -p $(DATA_PATH)/db_data
 	@mkdir -p $(DATA_PATH)/website_files
 	@echo "$(GREEN)Construyendo contenedores...$(RESET)"
-	@docker-compose -f $(COMPOSE) build
+	$(DOCKER_COMPOSE) build
 
 # 2. Levantar los servicios
 up:
 	@echo "$(GREEN)Levantando servicios...$(RESET)"
-	@docker-compose -f $(COMPOSE) up -d
+	$(DOCKER_COMPOSE) up -d
 
 # 3. Detener los servicios
 down:
 	@echo "$(RED)Deteniendo servicios...$(RESET)"
-	@docker-compose -f $(COMPOSE) down
+	$(DOCKER_COMPOSE) up -d down
 
 # 4. Limpieza total (Borra contenedores, imágenes y redes)
 clean: down
