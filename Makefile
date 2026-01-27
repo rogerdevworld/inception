@@ -30,7 +30,7 @@ up:
 # 3. Detener los servicios
 down:
 	@echo "$(RED)Deteniendo servicios...$(RESET)"
-	$(DOCKER_COMPOSE) up -d down
+	$(DOCKER_COMPOSE) down
 
 # 4. Limpieza total (Borra contenedores, imágenes y redes)
 clean: down
