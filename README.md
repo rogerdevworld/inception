@@ -3,7 +3,7 @@ https://www.youtube.com/watch?v=i5WUIO8LkEo
 https://www.youtube.com/watch?v=OEvHEeDpg_o
 
 
-[!image 1](./inception.png)
+![image 1](./inception.png)
 ### Comandos
 docker ps #ver contenedores activos 
 docker images # ver imagenes descargadas
