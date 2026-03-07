@@ -13,12 +13,9 @@ all: build up
 
 # Añadimos el flag --env-file para que sepa exactamente dónde está el secreto
 DOCKER_COMPOSE = docker compose --env-file srcs/.env -f srcs/docker-compose.yml
-install:
-	chmod +x instalar_docker.sh
-	./instalar_docker.sh
 
 # 1. Crear directorios y construir imágenes
-build: install
+build:
 	@echo "$(GREEN)Creando directorios para volúmenes en $(DATA_PATH)...$(RESET)"
 	@mkdir -p $(DATA_PATH)/db_data
 	@mkdir -p $(DATA_PATH)/website_files
@@ -26,7 +23,7 @@ build: install
 	$(DOCKER_COMPOSE) build
 
 # 2. Levantar los servicios
-up: install
+up:
 	@echo "$(GREEN)Levantando servicios...$(RESET)"
 	$(DOCKER_COMPOSE) up -d
 
