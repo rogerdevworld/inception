@@ -1,5 +1,5 @@
 name: rmarrero/inception:latest
-version: '3.8'
+#version: '3.8'
 
 services:
   mariadb:
