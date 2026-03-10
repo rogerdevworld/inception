@@ -55,6 +55,7 @@
     <header class="mb-12 border-b border-gray-700 pb-6">
         <h1 class="text-4xl font-bold mb-2">Proyecto Inception <span class="text-blue-400">42</span></h1>
         <p class="text-xl opacity-75">Guía de Referencia para <span class="underline decoration-blue-500">rmarrero</span></p>
+        <p class="text-sm mt-4 text-gray-400">Nota: Los archivos README.md de GitHub/42 interpretan etiquetas HTML para mejorar el formato visual.</p>
     </header>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
