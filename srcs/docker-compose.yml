@@ -7,7 +7,7 @@ services:
     build:
       context: ./requirements/mariadb
       dockerfile: Dockerfile
-    image: mariadb
+    image: mariadb:lastest
     restart: always
     env_file:
       - .env
