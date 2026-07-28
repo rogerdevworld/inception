@@ -27,11 +27,11 @@ down:
 
 clean: down
 	@echo "$(RED)Limpiando imágenes y redes de Docker...$(RESET)"
-	@docker system prune -a -f
+	$(DOCKER_COMPOSE) down --volume --remove-orphans
 
 fclean: clean
 	@echo "$(RED)Borrando volúmenes y datos físicos en $(DATA_PATH)...$(RESET)"
-	@docker volume rm $$(docker volume ls -q) 2>/dev/null || true
+	$(DOCKER_COMPOSE) down --volume --remove-orphans
 	@sudo rm -rf $(DATA_PATH)
 
 re: fclean all
