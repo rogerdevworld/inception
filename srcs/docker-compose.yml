@@ -1,12 +1,10 @@
 name: rmarrero/inception:latest
-version: '3.8'
 
 services:
   mariadb:
     container_name: mariadb
     build:
       context: ./requirements/mariadb
-      dockerfile: Dockerfile
     image: mariadb
     restart: always
     env_file:
@@ -20,11 +18,11 @@ services:
     container_name: wordpress
     build:
       context: ./requirements/wordpress
-      dockerfile: Dockerfile
     image: wordpress
     restart: always
     depends_on:
       - mariadb
+      - redis
     env_file:
       - .env
     volumes:
@@ -36,7 +34,6 @@ services:
     container_name: nginx
     build:
       context: ./requirements/nginx
-      dockerfile: Dockerfile
     image: nginx
     restart: always
     depends_on:
@@ -47,6 +44,75 @@ services:
       - .env
     volumes:
       - website_files:/var/www/html
+    networks:
+      - inception_network
+
+  # --- SERVICIOS BONUS ---
+  redis:
+    container_name: redis
+    build:
+      context: ./requirements/bonus/redis
+    image: redis
+    restart: always
+    networks:
+      - inception_network
+
+  ftp:
+    container_name: ftp
+    build:
+      context: ./requirements/bonus/ftp
+    image: ftp
+    restart: always
+    depends_on:
+      - wordpress
+    env_file:
+      - .env
+    ports:
+      - "21:21"
+      - "21100-21110:21100-21110"
+    volumes:
+      - website_files:/var/www/html
+    networks:
+      - inception_network
+
+  adminer:
+    container_name: adminer
+    build:
+      context: ./requirements/bonus/adminer
+    image: adminer
+    restart: always
+    depends_on:
+      - mariadb
+    ports:
+      - "8080:8080"
+    networks:
+      - inception_network
+
+  static_site:
+    container_name: static_site
+    build:
+      context: ./requirements/bonus/static_site
+    image: static_site
+    restart: always
+    ports:
+      - "8081:8081"
+    networks:
+      - inception_network
+
+  cadvisor:
+    container_name: cadvisor
+    build:
+      context: ./requirements/bonus/cadvisor
+    image: cadvisor
+    restart: always
+    ports:
+      - "8082:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
     networks:
       - inception_network
 
