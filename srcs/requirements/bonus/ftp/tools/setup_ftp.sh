@@ -5,10 +5,8 @@ if [ -z "$FTP_USER" ] || [ -z "$FTP_PASSWORD" ]; then
     FTP_PASSWORD="ftppassword123"
 fi
 
-# Crear el directorio base si no existe
 mkdir -p /var/www/html
 
-# Configurar el usuario de FTP si no existe
 if ! id "$FTP_USER" >/dev/null 2>&1; then
     useradd -m -s /bin/bash "$FTP_USER"
     echo "$FTP_USER:$FTP_PASSWORD" | chpasswd
@@ -16,7 +14,6 @@ if ! id "$FTP_USER" >/dev/null 2>&1; then
     echo "$FTP_USER" > /etc/vsftpd.userlist
 fi
 
-# Configuración de vsftpd
 cat << EOC > /etc/vsftpd.conf
 listen=YES
 listen_ipv6=NO
@@ -39,10 +36,8 @@ userlist_deny=NO
 local_root=/var/www/html
 EOC
 
-# Crear carpeta de runtime de vsftpd si no existe
 mkdir -p /var/run/vsftpd/empty
 
-# Dar permisos sobre la carpeta de WordPress
 chown -R $FTP_USER:$FTP_USER /var/www/html
 
 exec vsftpd /etc/vsftpd.conf
