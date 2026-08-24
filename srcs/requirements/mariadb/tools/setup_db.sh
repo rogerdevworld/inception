@@ -4,15 +4,11 @@ set -e
 mkdir -p /run/mysqld
 chown -R mysql:mysql /run/mysqld /var/lib/mysql
 
-# Verificamos si la base de datos específica ya existe en el volumen
 if [ ! -d "/var/lib/mysql/${SQL_DATABASE}" ]; then
     echo "[MariaDB] Primera ejecución: Inicializando almacenamiento..."
     mysql_install_db --user=mysql --datadir=/var/lib/mysql > /dev/null
 
-    # Arrancar mysqld de forma temporal para configurar usuarios
     mysqld_safe --datadir='/var/lib/mysql' --bind-address=0.0.0.0 &
-    
-    # Espera activa hasta que mysqld responda
     until mysqladmin ping >/dev/null 2>&1; do
         sleep 1
     done
